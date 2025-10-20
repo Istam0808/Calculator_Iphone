@@ -25,7 +25,7 @@ body {
   height: 100vh;
   width: 100vw;
   max-width: 100%;
-  padding: 2vh;
+  padding: 2vh 2vh 15vh 2vh;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -64,9 +64,9 @@ body {
   grid-gap: 2vw;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  padding: 0 2vw 2vw 2vw;
+  padding: 0 2vw 0 2vw;
   flex-shrink: 0;
-  height: 60vh;
+  height: 55vh;
 }
 
 .button {
@@ -124,7 +124,7 @@ body {
   background: rgba(255, 255, 255, 0.8);
   border-radius: 4px;
   position: absolute;
-  bottom: 1vh;
+  bottom: 3vh;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -189,6 +189,10 @@ body {
 
 /* Оптимизация для очень маленьких экранов */
 @media (max-width: 360px) {
+  .calculator {
+    padding: 2vh 2vh 15vh 2vh;
+  }
+  
   .value {
     font-size: 12vw;
     min-height: 12vh;
@@ -196,11 +200,15 @@ body {
   
   .buttons-container {
     grid-gap: 1.5vw;
-    height: 62vh;
+    height: 55vh;
   }
   
   .button {
     font-size: 5vw;
+  }
+  
+  .bottom {
+    bottom: 4vh;
   }
 }
 
