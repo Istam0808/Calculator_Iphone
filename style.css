@@ -7,86 +7,177 @@
 
 body {
   font-family: "Helvetica Neue", sans-serif;
-  margin: 25px;
-
-  background-size: 147vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #0a7ea4 0%, #4bb3d3 50%, #1e5f8f 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .calculator {
-  background: black;
+  background: url('iOS-26-Wallpaper.jpg') center/cover;
   border-radius: 50px;
   color: white;
-  height: 1218px;
-  padding: 20px;
+  height: 100vh;
+  width: 100vw;
+  max-width: 100%;
+  padding: 2vh;
   position: relative;
-  width: 563px;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(20px);
 }
 
 .top-container {
   display: flex;
-  height: 250px;
+  height: 10vh;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 2vw;
+  align-items: flex-start;
 }
 
 .value {
-  font-size: 130px;
-  font-weight: 300;
-  height: 158px;
-  margin-bottom: 20px;
-  margin-right: 20px;
+  font-size: 15vw;
+  font-weight: 200;
+  height: auto;
+  min-height: 15vh;
+  margin-bottom: 2vh;
+  margin-right: 2vw;
+  padding-right: 2vw;
   text-align: right;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  flex-grow: 1;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  transition: font-size 0.2s ease;
 }
 
 .buttons-container {
   display: grid;
-  grid-gap: 20px;
+  grid-gap: 2vw;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 1fr);
+  padding: 0 2vw 2vw 2vw;
+  flex-shrink: 0;
+  height: 60vh;
 }
 
 .button {
   align-items: center;
-  background: #333;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
-  font-size: 45px;
-  height: 110px;
+  font-size: 6vw;
+  font-weight: 300;
   justify-content: center;
-  transition: filter .3s;
-  width: 110px;
+  transition: all .2s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  touch-action: manipulation;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .button.function {
-  color: black;
-  background: #a5a5a5;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .button.operator {
-  background: #f1a33c;
+  background: rgba(120, 120, 128, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.button.operator.active {
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  color: rgba(50, 50, 50, 0.95);
 }
 
 .button.number-0 {
-  border-radius: 55px;
+  border-radius: 20vw;
   grid-column: 1 / span 2;
   justify-content: flex-start;
-  padding-left: 43px;
-  width: 250px;
+  padding-left: 8vw;
 }
 
-.button:active,
-.button:focus {
-  filter: brightness(120%);
+.button:active {
+  transform: scale(0.95);
+  filter: brightness(1.2);
 }
 
 .bottom {
-  width: 200px;
-  height: 5px;
-  background: white;
+  width: 35vw;
+  height: 1vh;
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 4px;
   position: absolute;
-  bottom: 10px;
+  bottom: 1vh;
   left: 50%;
   transform: translateX(-50%);
+}
+
+/* Media queries для десктопа */
+@media (min-width: 768px) {
+  .calculator {
+    height: 95vh;
+    width: 450px;
+    max-width: 450px;
+    border-radius: 50px;
+  }
+  
+  .value {
+    font-size: 80px;
+  }
+  
+  .buttons-container {
+    grid-gap: 15px;
+    padding: 0 15px 15px 15px;
+    height: auto;
+  }
+  
+  .button {
+    font-size: 32px;
+    height: 75px;
+    width: 75px;
+  }
+  
+  .button.number-0 {
+    width: 165px;
+    padding-left: 30px;
+    border-radius: 40px;
+  }
+  
+  .bottom {
+    width: 150px;
+    height: 5px;
+  }
+}
+
+/* Оптимизация для очень маленьких экранов */
+@media (max-width: 360px) {
+  .value {
+    font-size: 12vw;
+    min-height: 12vh;
+  }
+  
+  .buttons-container {
+    grid-gap: 1.5vw;
+    height: 62vh;
+  }
+  
+  .button {
+    font-size: 5vw;
+  }
 }

@@ -29,10 +29,12 @@ const numberElArray = [
   number5El, number6El, number7El, number8El, number9El
 ];
 
+const operatorElArray = [additionEl, subtractionEl, multiplicationEl, divisionEl];
 
 // variables
 let valueStrInMemory = null;
 let operatorInMemory = null;
+let waitingForNewValue = false;
 
 
 // Functions
@@ -55,11 +57,51 @@ const setStrAsValue = (valueStr) => {
   } else {
     valueEl.textContent = parseFloat(wholeNumStr).toLocaleString();
   }
+  
+  // Динамическое изменение размера шрифта для длинных чисел
+  const displayLength = valueEl.textContent.length;
+  if (window.innerWidth < 768) {
+    // Мобильные устройства
+    if (displayLength > 9) {
+      valueEl.style.fontSize = '10vw';
+    } else if (displayLength > 7) {
+      valueEl.style.fontSize = '12vw';
+    } else {
+      valueEl.style.fontSize = '15vw';
+    }
+  } else {
+    // Десктоп
+    if (displayLength > 9) {
+      valueEl.style.fontSize = '50px';
+    } else if (displayLength > 7) {
+      valueEl.style.fontSize = '65px';
+    } else {
+      valueEl.style.fontSize = '80px';
+    }
+  }
+};
+
+const clearActiveOperator = () => {
+  operatorElArray.forEach(el => {
+    if (el) el.classList.remove('active');
+  });
+};
+
+const setActiveOperator = (operation) => {
+  clearActiveOperator();
+  if (operation === 'addition') additionEl.classList.add('active');
+  else if (operation === 'subtraction') subtractionEl.classList.add('active');
+  else if (operation === 'multiplication') multiplicationEl.classList.add('active');
+  else if (operation === 'division') divisionEl.classList.add('active');
 };
 
 const handleNumberClick = (numStr) => {
   const currentValueStr = getValueAsStr();
-  if (currentValueStr === '0') {
+  
+  if (waitingForNewValue) {
+    setStrAsValue(numStr);
+    waitingForNewValue = false;
+  } else if (currentValueStr === '0') {
     setStrAsValue(numStr);
   } else {
     setStrAsValue(currentValueStr + numStr);
@@ -70,6 +112,7 @@ const getResultOfOperationAsStr = () => {
   const currentValueNum = getValueAsNum();
   const valueNumInMemory = parseFloat(valueStrInMemory);
   let newValueNum;
+  
   if (operatorInMemory === 'addition') {
     newValueNum = valueNumInMemory + currentValueNum;
   } else if (operatorInMemory === 'subtraction') {
@@ -77,6 +120,9 @@ const getResultOfOperationAsStr = () => {
   } else if (operatorInMemory === 'multiplication') {
     newValueNum = valueNumInMemory * currentValueNum;
   } else if (operatorInMemory === 'division') {
+    if (currentValueNum === 0) {
+      return 'Error';
+    }
     newValueNum = valueNumInMemory / currentValueNum;
   }
 
@@ -89,12 +135,30 @@ const handleOperatorClick = (operation) => {
   if (!valueStrInMemory) {
     valueStrInMemory = currentValueStr;
     operatorInMemory = operation;
-    setStrAsValue('0');
+    waitingForNewValue = true;
+    setActiveOperator(operation);
     return;
   }
-  valueStrInMemory = getResultOfOperationAsStr();
+  
+  if (!waitingForNewValue) {
+    const result = getResultOfOperationAsStr();
+    if (result === 'Error') {
+      setStrAsValue('Error');
+      valueStrInMemory = null;
+      operatorInMemory = null;
+      clearActiveOperator();
+      waitingForNewValue = true;
+      return;
+    }
+    valueStrInMemory = result;
+    setStrAsValue(result);
+  } else {
+    valueStrInMemory = currentValueStr;
+  }
+  
   operatorInMemory = operation;
-  setStrAsValue('0');
+  waitingForNewValue = true;
+  setActiveOperator(operation);
 };
 
 
@@ -105,6 +169,8 @@ acEl.addEventListener('click', () => {
   setStrAsValue('0');
   valueStrInMemory = null;
   operatorInMemory = null;
+  waitingForNewValue = false;
+  clearActiveOperator();
 });
 pmEl.addEventListener('click', () => {
   const currentValueNum = getValueAsNum();
@@ -124,8 +190,7 @@ percentEl.addEventListener('click', () => {
   const currentValueNum = getValueAsNum();
   const newValueNum = currentValueNum / 100;
   setStrAsValue(newValueNum.toString());
-  valueStrInMemory = null;
-  operatorInMemory = null;
+  waitingForNewValue = false;
 });
 
 
@@ -143,10 +208,17 @@ divisionEl.addEventListener('click', () => {
   handleOperatorClick('division');
 });
 equalEl.addEventListener('click', () => {
-  if (valueStrInMemory) {
-    setStrAsValue(getResultOfOperationAsStr());
+  if (valueStrInMemory && !waitingForNewValue) {
+    const result = getResultOfOperationAsStr();
+    if (result === 'Error') {
+      setStrAsValue('Error');
+    } else {
+      setStrAsValue(result);
+    }
     valueStrInMemory = null;
     operatorInMemory = null;
+    waitingForNewValue = true;
+    clearActiveOperator();
   }
 });
 
@@ -160,7 +232,11 @@ for (let i=0; i < numberElArray.length; i++) {
 }
 decimalEl.addEventListener('click', () => {
   const currentValueStr = getValueAsStr();
-  if (!currentValueStr.includes('.')) {
+  
+  if (waitingForNewValue) {
+    setStrAsValue('0.');
+    waitingForNewValue = false;
+  } else if (!currentValueStr.includes('.')) {
     setStrAsValue(currentValueStr + '.');
   }
 });
@@ -181,3 +257,4 @@ const updateTime = () => {
 }
 setInterval(updateTime, 1000);
 updateTime();
+
