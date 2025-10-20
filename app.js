@@ -38,6 +38,26 @@ let waitingForNewValue = false;
 
 
 // Functions
+const createRipple = (event) => {
+  const button = event.currentTarget;
+  const ripple = document.createElement('span');
+  
+  const rect = button.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const x = event.clientX - rect.left - size / 2;
+  const y = event.clientY - rect.top - size / 2;
+  
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = x + 'px';
+  ripple.style.top = y + 'px';
+  ripple.classList.add('ripple');
+  
+  button.appendChild(ripple);
+  
+  setTimeout(() => {
+    ripple.remove();
+  }, 600);
+};
 const getValueAsStr = () => valueEl.textContent.split(',').join('');
 
 const getValueAsNum = () => {
@@ -62,19 +82,27 @@ const setStrAsValue = (valueStr) => {
   const displayLength = valueEl.textContent.length;
   if (window.innerWidth < 768) {
     // Мобильные устройства
-    if (displayLength > 9) {
-      valueEl.style.fontSize = '10vw';
-    } else if (displayLength > 7) {
-      valueEl.style.fontSize = '12vw';
+    if (displayLength > 12) {
+      valueEl.style.fontSize = '7vw';
+    } else if (displayLength > 10) {
+      valueEl.style.fontSize = '9vw';
+    } else if (displayLength > 8) {
+      valueEl.style.fontSize = '11vw';
+    } else if (displayLength > 6) {
+      valueEl.style.fontSize = '13vw';
     } else {
       valueEl.style.fontSize = '15vw';
     }
   } else {
     // Десктоп
-    if (displayLength > 9) {
+    if (displayLength > 12) {
+      valueEl.style.fontSize = '40px';
+    } else if (displayLength > 10) {
       valueEl.style.fontSize = '50px';
-    } else if (displayLength > 7) {
-      valueEl.style.fontSize = '65px';
+    } else if (displayLength > 8) {
+      valueEl.style.fontSize = '60px';
+    } else if (displayLength > 6) {
+      valueEl.style.fontSize = '70px';
     } else {
       valueEl.style.fontSize = '80px';
     }
@@ -97,6 +125,12 @@ const setActiveOperator = (operation) => {
 
 const handleNumberClick = (numStr) => {
   const currentValueStr = getValueAsStr();
+  
+  // Ограничение на максимальное количество символов (без учёта запятых и точек)
+  const digitsOnly = currentValueStr.replace(/[,\.\-]/g, '');
+  if (!waitingForNewValue && digitsOnly.length >= 20) {
+    return;
+  }
   
   if (waitingForNewValue) {
     setStrAsValue(numStr);
@@ -257,4 +291,11 @@ const updateTime = () => {
 }
 setInterval(updateTime, 1000);
 updateTime();
+
+
+// Add ripple effect to all buttons
+const allButtons = document.querySelectorAll('.button');
+allButtons.forEach(button => {
+  button.addEventListener('click', createRipple);
+});
 

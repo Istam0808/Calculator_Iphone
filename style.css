@@ -48,16 +48,15 @@ body {
   margin-bottom: 2vh;
   margin-right: 2vw;
   padding-right: 2vw;
+  padding-left: 2vw;
   text-align: right;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
   color: rgba(255, 255, 255, 0.95);
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   flex-grow: 1;
-  word-break: break-all;
-  overflow-wrap: break-word;
   transition: font-size 0.2s ease;
+  line-height: 1.2;
+  white-space: nowrap;
+  display: block;
 }
 
 .buttons-container {
@@ -85,6 +84,8 @@ body {
   -webkit-backdrop-filter: blur(10px);
   touch-action: manipulation;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
 .button.function {
@@ -130,38 +131,59 @@ body {
 
 /* Media queries для десктопа */
 @media (min-width: 768px) {
+  body {
+    padding: 20px;
+  }
+  
   .calculator {
-    height: 95vh;
-    width: 450px;
-    max-width: 450px;
-    border-radius: 50px;
+    height: auto;
+    max-height: 95vh;
+    width: 420px;
+    max-width: 420px;
+    border-radius: 45px;
+    padding: 25px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+  
+  .top-container {
+    height: 50px;
+    padding: 0 10px;
+    margin-bottom: 20px;
   }
   
   .value {
-    font-size: 80px;
+    font-size: 72px;
+    min-height: 100px;
+    padding: 10px 15px;
+    margin-bottom: 25px;
+    line-height: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
   }
   
   .buttons-container {
-    grid-gap: 15px;
-    padding: 0 15px 15px 15px;
+    grid-gap: 12px;
+    padding: 0;
     height: auto;
   }
   
   .button {
-    font-size: 32px;
-    height: 75px;
-    width: 75px;
+    font-size: 28px;
+    height: 80px;
+    width: 80px;
   }
   
   .button.number-0 {
-    width: 165px;
-    padding-left: 30px;
+    width: 172px;
+    padding-left: 32px;
     border-radius: 40px;
   }
   
   .bottom {
-    width: 150px;
+    width: 140px;
     height: 5px;
+    bottom: 8px;
   }
 }
 
@@ -179,5 +201,26 @@ body {
   
   .button {
     font-size: 5vw;
+  }
+}
+
+/* Ripple эффект */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(0);
+  animation: ripple-animation 600ms ease-out;
+  pointer-events: none;
+}
+
+@keyframes ripple-animation {
+  from {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(4);
+    opacity: 0;
   }
 }
